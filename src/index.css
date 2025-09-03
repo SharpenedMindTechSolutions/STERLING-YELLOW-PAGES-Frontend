@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+
+@layer utilities {
+  .clip-diagonal {
+    clip-path: polygon(20% 0, 100% 0%, 100% 100%, 0% 99.5%);
+  }
+
+}
+
