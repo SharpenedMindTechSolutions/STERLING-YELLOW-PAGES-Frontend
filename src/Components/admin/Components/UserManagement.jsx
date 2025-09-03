@@ -97,7 +97,7 @@ const UserManagement = () => {
     try {
       const token = localStorage.getItem("adminToken");
       await axios.put(
-        `http://localhost:5000/api/admin/users/${selectedUser.id}/unblock`,
+        `${API}admin/users/${selectedUser.id}/unblock`,
         { status: "Active" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -121,7 +121,7 @@ const UserManagement = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await axios.get(
-        "http://localhost:5000/api/admin/users/export/excel",
+        `${API}admin/users/export/excel`,
         {
           responseType: "blob",
           headers: { Authorization: `Bearer ${token}` },

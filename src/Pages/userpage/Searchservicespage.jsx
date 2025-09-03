@@ -6,7 +6,7 @@ import Footer from "../../Layout/Footer";
 import { MapPin, Phone } from "lucide-react";
 import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/'
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
 
 
 function Searchservicespage() {
