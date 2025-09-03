@@ -6,7 +6,7 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import QuickContact from "../Components/Common/QuickContact.jsx";
 import axios from 'axios';
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/'
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
 
 
 const IndividualCategoryPage = () => {

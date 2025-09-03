@@ -6,6 +6,8 @@ import { Upload, X, ArrowLeft } from "lucide-react";
 import { categories } from "../../Data/categories";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+
 
 const PostAds = () => {
   const navigate = useNavigate();
@@ -53,7 +55,7 @@ const PostAds = () => {
         }
 
         await axios.post(
-          "http://localhost:5000/api/user/ads/create-business",
+          `${API}user/ads/create-business`,
           formData,
           {
             headers: {

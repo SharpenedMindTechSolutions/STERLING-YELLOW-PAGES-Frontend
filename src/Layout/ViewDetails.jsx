@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Globe, ArrowLeft, HeartIcon } from 'lucide-react';
 import axios from 'axios';
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/'
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
 
 function ViewDetails() {
   const { id } = useParams();

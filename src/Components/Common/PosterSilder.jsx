@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from "axios";
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+
 
 export default function PosterSlider() {
   const [ads, setAds] = useState([]);
@@ -10,7 +12,7 @@ export default function PosterSlider() {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/user/ads/getads");
+        const res = await axios.get(`${API}user/ads/getads`);
         const adsArray = Array.isArray(res.data) ? res.data : res.data?.ads;
         if (adsArray && Array.isArray(adsArray)) {
           const formatted = adsArray.map(ad => ({

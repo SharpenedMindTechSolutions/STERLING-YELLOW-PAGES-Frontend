@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import { categories } from "../../../Data/categories";
 
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/'
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
 
 const BusinessListings = () => {
   const [businesses, setBusinesses] = useState([]);

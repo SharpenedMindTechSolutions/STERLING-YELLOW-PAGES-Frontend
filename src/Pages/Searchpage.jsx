@@ -8,7 +8,7 @@ import QuickContact from '../Components/Common/QuickContact';
 import axios from 'axios';
 import { categories } from '../../src/Data/categories';
 
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/'
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
 
 const Searchpage = () => {
   const [viewMode, setViewMode] = useState('grid');
