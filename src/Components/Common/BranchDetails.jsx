@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { branchData } from '../../Data/BranchData';
+import { branchData } from '../../Data/branchData.js';
 import { Phone, Mail, MapPin } from 'lucide-react';
 
 function BranchDetails() {
