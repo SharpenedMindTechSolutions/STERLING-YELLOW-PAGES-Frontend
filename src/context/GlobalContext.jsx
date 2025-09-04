@@ -42,7 +42,7 @@ export const GlobalProvider = ({ children }) => {
     const submitContact = async (formData) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post(`${API}/user/ads/contactform`, formData, {
+            const res = await axios.post(`${API}user/ads/contactform`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
