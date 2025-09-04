@@ -18,7 +18,8 @@ function ViewDetails() {
     if (!business) {
       const fetchBusinessDetails = async () => {
         try {
-          const res = await axios.get(`${API}user/business/${id}`);
+          const res = await axios.get(`${API}user/ads/business/${id}`);
+          console.log(res);
           setBusiness(res.data);
         } catch (err) {
           setError("Business not found");
