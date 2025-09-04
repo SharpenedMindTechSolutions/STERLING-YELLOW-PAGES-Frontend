@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from '../utils/axiosInstance';
+const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+
 
 
 const GlobalContext = createContext();
@@ -40,7 +42,7 @@ export const GlobalProvider = ({ children }) => {
     const submitContact = async (formData) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('/users/contactform', formData, {
+            const res = await axios.post(`${API}/user/ads/contactform`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
