@@ -10,13 +10,13 @@ const SearchBar = ({ onSearch }) => {
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const API = import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api";
+  const API = import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api/";
 
   // Fetch categories once
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get(`${API}/user/ads/get-category`);
+        const res = await axios.get(`${API}user/ads/get-category`);
         const data = res.data;
         if (Array.isArray(data)) {
           setCategories(data);
