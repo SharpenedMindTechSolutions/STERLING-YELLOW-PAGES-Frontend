@@ -21,10 +21,12 @@ import {
   TrendingUp,
   BarChart3,
   Flag,
-UserRoundCog,
+  UserRoundCog,
   LogOut,
   Menu,
-  X
+  X,
+  PlusCircle,
+  Phone
 } from 'lucide-react';
 import Dashboard from '../Components/Dashboard';
 import BusinessListings from '../Components/BusinessListings';
@@ -32,6 +34,9 @@ import UserManagement from '../Components/UserManagement';
 import CategoryManagement from '../Components/CategoryManagement';
 import AdUploadForm from '../Components/AdUploadForm';
 import AdminProfileForm from '../Components/AdminProfileForm';
+import CreatecategoryForm from '../Components/CreatecategoryForm';
+import ContactEditForm from '../Components/ContactEditForm';
+
 
 const AdminDashboard = () => {
   const { id } = useParams();
@@ -48,9 +53,13 @@ const AdminDashboard = () => {
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3, description: 'Overview & Analytics' },
     { id: 'listings', label: 'Business Listings', icon: Building, description: 'Manage all business listings', },
     { id: 'users', label: 'User Management', icon: Users, description: 'Manage platform users' },
-    { id: 'categories', label: 'Categories', icon: Tags, description: 'Manage business categories' },
+    { id: 'categories', label: 'Categories list', icon: Tags, description: 'Manage business categories' },
+    { id: 'create-category', label: 'Create Category', icon: PlusCircle, description: 'Add new categories' },
     { id: 'ads', label: 'Ads Slider Section', icon: Flag, description: 'Handle Ads Slider' },
-    { id: 'profile', label: 'Profile', icon: UserRoundCog, description: 'Manage Admin Profilre' },
+    { id: 'profile', label: 'Profile Edit', icon: UserRoundCog, description: 'Manage Admin Profilre' },
+    { id: 'contact', label: 'Contact Edit', icon: Phone, description: 'Edit contact information' },
+
+
 
   ];
 
@@ -62,6 +71,8 @@ const AdminDashboard = () => {
       case 'categories': return <CategoryManagement />;
       case 'ads': return <AdUploadForm />;
       case 'profile': return <AdminProfileForm />;
+      case 'create-category': return <CreatecategoryForm />;
+      case 'contact': return <ContactEditForm />;
 
       default: return <div>Dashboard Content</div>;
     }
@@ -145,7 +156,7 @@ const AdminDashboard = () => {
               </p>
             </div>
             <div className="flex items-center space-x-4 ">
-    
+
               <div className="w-8 h-8 bg-gradient-to-br from-yellow-300 to-yellow-600 rounded-full flex items-center justify-center">
                 <span className="text-black font-medium text-sm">A</span>
               </div>

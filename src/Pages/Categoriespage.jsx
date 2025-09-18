@@ -75,6 +75,7 @@ const Categories = () => {
                                 const Icon = iconMap[category.icon] || Package;
                                 return (
                                     <Link
+                                    viewTransition
                                         key={category.id}
                                         to={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
                                         className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6 group"

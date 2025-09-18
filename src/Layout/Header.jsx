@@ -32,7 +32,7 @@ const Header = () => {
     <header className="bg-black shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2" viewTransition>
             <span className="text-xl font-bold text-yellowCustom sm:inline">Sterling Yellow Pages</span>
           </Link>
 
@@ -41,6 +41,7 @@ const Header = () => {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
+                  viewTransition
                   to={item.href}
                   className={`text-sm font-medium transition-colors duration-200 ${location.pathname === item.href
                     ? 'text-yellowCustom border-b-2 border-yellowCustom'
@@ -69,6 +70,7 @@ const Header = () => {
                     <div className="py-1">
                       <Link
                         to={`/dashboard/${userId}`}
+                        viewTransition
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-yellowCustom"
                       >
                         <Settings className="w-4 h-4 mr-2" />
@@ -76,6 +78,7 @@ const Header = () => {
                       </Link>
                       <Link
                         to={`/profile/${userId}`}
+                        viewTransition
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-yellowCustom"
                       >
                         <User className="w-4 h-4 mr-2" />
@@ -96,12 +99,14 @@ const Header = () => {
               <div className="flex items-center space-x-4">
                 <Link
                   to="/login"
+                  viewTransition
                   className="text-sm font-medium text-gray-700 bg-white border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors"
                 >
                   Login
                 </Link>
 
                 <Link
+                viewTransition
                   to="/register"
                   className="text-black px-4 py-2 rounded-md text-sm font-medium bg-yellowCustom hover:bg-yellowCustom transition-colors"
                 >
@@ -125,6 +130,7 @@ const Header = () => {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
+                  viewTransition
                   to={item.href}
                   className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${location.pathname === item.href
                     ? 'text-yellowCustom bg-white rounded-md'
@@ -140,12 +146,14 @@ const Header = () => {
               <div className="pt-4">
                 <Link
                   to={`/dashboard/${userId}`}
+                  viewTransition
                   className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to={`/profile/${userId}`}
+                  viewTransition
                   className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
                 >
                   Profile
@@ -162,6 +170,7 @@ const Header = () => {
                 <div className="flex justify-between space-x-3">
                   <Link
                     to="/login"
+                    viewTransition
                     className="flex-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 px-4 py-2 rounded-md text-center hover:bg-gray-100 transition-colors"
                   >
                     Login
@@ -169,6 +178,7 @@ const Header = () => {
 
                   <Link
                     to="/register"
+                    viewTransition
                     className="flex-1 text-sm font-medium text-black bg-yellowCustom px-4 py-2 rounded-md text-center hover:bg-yellowCustom transition-colors"
                   >
                     Sign Up

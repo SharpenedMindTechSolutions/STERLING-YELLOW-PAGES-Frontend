@@ -37,7 +37,6 @@ const Dashboard = () => {
         `${API}admin/dashboard/recent-businesses`,
         { headers: { Authorization: `Bearer ${adminToken}` } }
       );
-      console.log(res)
       setRecentBusinesses(res.data.recent || []);
     } catch (err) {
       console.error("Error fetching recent businesses", err);

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Plus,
   Search,
@@ -12,7 +12,6 @@ import {
   List as ListIcon,
 } from "lucide-react";
 import axios from "axios";
-import { categories } from "../../../Data/categories";
 
 const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
 
@@ -31,9 +30,59 @@ const BusinessListings = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
-
+  const [categories, setCategories] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   // 🔹 Fetch all businesses (Admin)
+
+  // 🔹 Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = localStorage.getItem("adminToken");
+        const res = await axios.get(`${API}admin/category/get-category`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (Array.isArray(res.data)) {
+          setCategories(res.data);
+        } else if (res.data?.categories && Array.isArray(res.data.categories)) {
+          setCategories(res.data.categories);
+        } else {
+          setCategories([]);
+        }
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // 🔹 Autocomplete for category filter
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setCategoryFilter(value);
+
+    if (value.length > 0) {
+      const filtered = categories.filter((cat) =>
+        cat.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setSuggestions(filtered);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSelect = (name) => {
+    setCategoryFilter(name);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
+
   const fetchBusinesses = async () => {
     try {
       const res = await axios.get(`${API}admin/all-business`, {
@@ -245,19 +294,29 @@ const BusinessListings = () => {
               <option value="rejected">Rejected</option>
             </select>
           </div>
-          <div>
-            <select
+          <div className="relative w-full">
+
+            <input
+              type="text"
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
+              onChange={handleChange}
+              placeholder="Search categories..."
               className="w-full px-4 py-2 border rounded-lg bg-white text-black focus:ring-1 focus:ring-yellow-400"
-            >
-              <option value="">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.name} className="text-black">
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+            />
+
+            {showSuggestions && suggestions.length > 0 && (
+              <ul className="absolute w-full bg-white border rounded-lg shadow-md mt-1 max-h-40 overflow-y-auto z-10">
+                {suggestions.map((cat) => (
+                  <li
+                    key={cat._id}
+                    onClick={() => handleSelect(cat.name)}
+                    className="px-4 py-2 cursor-pointer hover:bg-yellow-100 text-black"
+                  >
+                    {cat.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div>
             <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center justify-center" onClick={handleExport}>
@@ -279,6 +338,7 @@ const BusinessListings = () => {
               onStatusChange={handleStatusChange}
               onView={handleView}
               statusUpdatingId={statusUpdatingId}
+
             />
           ) : (
             <p className="text-center text-gray-500 py-4">No businesses found.</p>
@@ -287,8 +347,10 @@ const BusinessListings = () => {
       </div>
 
       {/* Pagination */}
+
       {businesses.length > 0 && (
         <div className="flex justify-center mt-4 space-x-2">
+          {/* Prev Button */}
           <button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
@@ -296,18 +358,33 @@ const BusinessListings = () => {
           >
             Prev
           </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setPage(i + 1)}
-              className={`px-3 py-1 rounded ${page === i + 1
-                  ? "bg-yellow-400 text-white"
-                  : "bg-gray-200 hover:bg-gray-300"
-                }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+
+          {/* Page Numbers */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(p =>
+              p === 1 ||
+              p === totalPages ||
+              (p >= page - 1 && p <= page + 1)
+            )
+            .map((p, idx, arr) => (
+              <React.Fragment key={p}>
+                {/* Insert ... when gap exists */}
+                {idx > 0 && arr[idx - 1] !== p - 1 && (
+                  <span className="px-2">...</span>
+                )}
+                <button
+                  onClick={() => setPage(p)}
+                  className={`px-3 py-1 rounded ${page === p
+                    ? "bg-yellow-400 text-white"
+                    : "bg-gray-200 hover:bg-gray-300"
+                    }`}
+                >
+                  {p}
+                </button>
+              </React.Fragment>
+            ))}
+
+          {/* Next Button */}
           <button
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
@@ -318,8 +395,9 @@ const BusinessListings = () => {
         </div>
       )}
 
+
       {/* Modals */}
-      {showModal && <BusinessModal business={selectedBusiness} setBusiness={setSelectedBusiness} onClose={() => setShowModal(false)} onSave={handleSave} mode={modalMode} />}
+      {showModal && <BusinessModal business={selectedBusiness} setBusiness={setSelectedBusiness} onClose={() => setShowModal(false)} onSave={handleSave} mode={modalMode} categories={categories} />}
       {showViewModal && viewBusiness && <ViewBusinessModal business={viewBusiness} onClose={() => setShowViewModal(false)} />}
     </div>
   );
@@ -410,163 +488,204 @@ const BusinessTable = ({ businesses = [], onEdit, onDelete, onStatusChange, onVi
 );
 
 // ⬇️ Add/Edit Modal
-const BusinessModal = ({ business, setBusiness, onClose, onSave, mode }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
-    <div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8 rounded-2xl shadow-2xl relative">
-      <button
-        onClick={onClose}
-        className="absolute top-5 right-5 text-gray-500 hover:text-red-500 transition"
-      >
-        <X className="w-6 h-6" />
-      </button>
-      <h3 className="text-2xl font-bold mb-6 text-gray-900">
-        {mode === "add" ? "Add Business" : "Edit Business"}
-      </h3>
-      <div className="space-y-6">
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-2">Business Name</label>
-          <input
-            type="text"
-            placeholder="Enter business name"
-            value={business?.name || ""}
-            onChange={(e) => setBusiness({ ...business, name: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-2">Email</label>
-          <input
-            type="email"
-            placeholder="Enter email address"
-            value={business?.email || ""}
-            onChange={(e) => setBusiness({ ...business, email: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
-          />
-        </div>
-        <div className="flex flex-col w-full">
-          <label htmlFor="category" className="text-gray-700 font-medium mb-2">
-            Category
-          </label>
-          <select
-            id="category"
-            value={business?.category || ""}
-            onChange={(e) => setBusiness({ ...business, category: e.target.value })}
-            required
-            className="pl-3 pr-4 py-2 rounded-md border border-gray-300 w-full text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-          >
-            <option value="">Select category</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.name}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-2">Description</label>
-          <textarea
-            placeholder="Enter business description"
-            value={business?.description || ""}
-            onChange={(e) => setBusiness({ ...business, description: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-5 py-3 h-28 resize-none focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-2">Address</label>
-          <input
-            type="text"
-            placeholder="Enter business address"
-            value={business?.address || ""}
-            onChange={(e) => setBusiness({ ...business, address: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-2">Phone</label>
-          <input
-            type="text"
-            placeholder="Enter phone number"
-            value={business?.phone || ""}
-            onChange={(e) => setBusiness({ ...business, phone: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-2">Business Image</label>
-          <div className="relative w-full h-40 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-yellow-400 transition">
-            {business?.logoFile ? (
-              <div className="relative w-28 h-28">
-                <img
-                  src={URL.createObjectURL(business.logoFile)}
-                  alt="Preview"
-                  className="w-full h-full object-cover rounded-lg border"
-                />
-                <button
-                  type="button"
-                  onClick={() => setBusiness({ ...business, logoFile: null })}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600"
-                >
-                  ✕
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className="flex flex-col items-center justify-center text-gray-400 pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-10 w-10 mb-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+const BusinessModal = ({ business, setBusiness, onClose, onSave, mode, categories }) => {
+  const [categoryInput, setCategoryInput] = useState(business?.category || "");
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef();
+
+  useEffect(() => {
+    if (categoryInput === "") {
+      setFilteredCategories([]);
+    } else {
+      const filtered = categories.filter((cat) =>
+        cat.name.toLowerCase().includes(categoryInput.toLowerCase())
+      );
+      setFilteredCategories(filtered);
+    }
+  }, [categoryInput, categories]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleCategorySelect = (name) => {
+    setBusiness({ ...business, category: name });
+    setCategoryInput(name);
+    setShowDropdown(false);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
+      <div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8 rounded-2xl shadow-2xl relative">
+        <button
+          onClick={onClose}
+          className="absolute top-5 right-5 text-gray-500 hover:text-red-500 transition"
+        >
+          <X className="w-6 h-6" />
+        </button>
+
+        <h3 className="text-2xl font-bold mb-6 text-gray-900">
+          {mode === "add" ? "Add Business" : "Edit Business"}
+        </h3>
+
+        <div className="space-y-6">
+          {/* Business Name */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Business Name</label>
+            <input
+              type="text"
+              placeholder="Enter business name"
+              value={business?.name || ""}
+              onChange={(e) => setBusiness({ ...business, name: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
+            />
+          </div>
+
+          {/* Email */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Email</label>
+            <input
+              type="email"
+              placeholder="Enter email address"
+              value={business?.email || ""}
+              onChange={(e) => setBusiness({ ...business, email: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
+            />
+          </div>
+
+          {/* Category Autocomplete */}
+          <div className="flex flex-col relative" ref={dropdownRef}>
+            <label className="text-gray-700 font-medium mb-2">Category</label>
+            <input
+              type="text"
+              placeholder="Select or type category"
+              value={categoryInput}
+              onChange={(e) => {
+                setCategoryInput(e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
+            />
+            {showDropdown && filteredCategories.length > 0 && (
+              <ul className="absolute z-50 w-full bg-white border border-gray-300 rounded-lg mt-1 max-h-48 overflow-y-auto shadow-md">
+                {filteredCategories.map((cat) => (
+                  <li
+                    key={cat._id}
+                    onClick={() => handleCategorySelect(cat.name)}
+                    className="px-5 py-2 hover:bg-yellow-100 cursor-pointer"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 15a4 4 0 004 4h10a4 4 0 004-4v-7a4 4 0 00-4-4H7a4 4 0 00-4 4v7z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 10l5 5 5-5"
-                    />
-                  </svg>
-                  <p className="text-sm">Click to upload image</p>
-                </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setBusiness({ ...business, logoFile: e.target.files[0] })}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-              </>
+                    {cat.name}
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
-        </div>
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-2">Status</label>
-          <select
-            value={business?.status || "pending"}
-            onChange={(e) => setBusiness({ ...business, status: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm bg-white"
+
+          {/* Description */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Description</label>
+            <textarea
+              placeholder="Enter business description"
+              value={business?.description || ""}
+              onChange={(e) => setBusiness({ ...business, description: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 h-28 resize-none focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
+            />
+          </div>
+
+          {/* Address */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Address</label>
+            <input
+              type="text"
+              placeholder="Enter business address"
+              value={business?.address || ""}
+              onChange={(e) => setBusiness({ ...business, address: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
+            />
+          </div>
+
+          {/* Phone */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Phone</label>
+            <input
+              type="text"
+              placeholder="Enter phone number"
+              value={business?.phone || ""}
+              onChange={(e) => setBusiness({ ...business, phone: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
+            />
+          </div>
+
+          {/* Business Image */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Business Image</label>
+            <div className="relative w-full h-40 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-yellow-400 transition">
+              {business?.logoFile ? (
+                <div className="relative w-28 h-28">
+                  <img
+                    src={URL.createObjectURL(business.logoFile)}
+                    alt="Preview"
+                    className="w-full h-full object-cover rounded-lg border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setBusiness({ ...business, logoFile: null })}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-col items-center justify-center text-gray-400 pointer-events-none">
+                    <p className="text-sm">Click to upload image</p>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setBusiness({ ...business, logoFile: e.target.files[0] })}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Status */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Status</label>
+            <select
+              value={business?.status || "pending"}
+              onChange={(e) => setBusiness({ ...business, status: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm bg-white"
+            >
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+
+          {/* Save Button */}
+          <button
+            onClick={onSave}
+            className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-lg hover:bg-yellow-500 transition-all shadow-md"
           >
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-          </select>
+            {mode === "add" ? "Add Business" : "Save Changes"}
+          </button>
         </div>
-        <button
-          onClick={onSave}
-          className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-lg hover:bg-yellow-500 transition-all shadow-md"
-        >
-          {mode === "add" ? "Add Business" : "Save Changes"}
-        </button>
       </div>
     </div>
-  </div>
-);
-
+  );
+};
 // ⬇️ View Modal
 
 const ViewBusinessModal = ({ business, onClose }) => (

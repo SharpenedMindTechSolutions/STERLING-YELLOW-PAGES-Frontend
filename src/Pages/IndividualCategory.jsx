@@ -25,7 +25,7 @@ const IndividualCategoryPage = () => {
         const res = await axios.get(
           `${API}user/ads/getall-category?category=${formattedCategory}`
         );
-
+      console.log(res);
         setBusinesses(res.data || []);
         setLoading(false);
       } catch (error) {

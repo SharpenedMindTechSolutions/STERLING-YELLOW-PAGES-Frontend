@@ -31,7 +31,7 @@ const Homepage = () => {
   const navigate = useNavigate();
 
   const [results, setResults] = useState([]);
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const categories = [
     { id: 1, name: 'Restaurants', icon: 'utensils', businessCount: 124 },
@@ -67,7 +67,6 @@ const [loading, setLoading] = useState(false);
     params.append('q', query);
     params.append('category', category);
     params.append('location', location);
-
     window.location.href = `/searchservice?${params.toString()}`;
   };
 

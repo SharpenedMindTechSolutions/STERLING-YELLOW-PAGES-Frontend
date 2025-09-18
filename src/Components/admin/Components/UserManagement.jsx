@@ -313,6 +313,7 @@ const UserManagement = () => {
 
               {/* Pagination */}
               <div className="flex justify-center items-center mt-4 space-x-2 p-4">
+                {/* Prev Button */}
                 <button
                   disabled={currentPage === 1}
                   onClick={() => handlePageChange(currentPage - 1)}
@@ -320,18 +321,33 @@ const UserManagement = () => {
                 >
                   Prev
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => handlePageChange(i + 1)}
-                    className={`px-3 py-1 border rounded ${currentPage === i + 1
-                      ? "bg-yellow-400 text-black"
-                      : "bg-white"
-                      }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(
+                    (page) =>
+                      page === 1 || 
+                      page === totalPages || 
+                      (page >= currentPage - 1 && page <= currentPage + 1) 
+                  )
+                  .map((page, idx, arr) => (
+                    <React.Fragment key={page}>
+                      {idx > 0 && arr[idx - 1] !== page - 1 && (
+                        <span className="px-2">...</span>
+                      )}
+
+                      <button
+                        onClick={() => handlePageChange(page)}
+                        className={`px-3 py-1 border rounded ${currentPage === page
+                            ? "bg-yellow-400 text-black"
+                            : "bg-white hover:bg-gray-100"
+                          }`}
+                      >
+                        {page}
+                      </button>
+                    </React.Fragment>
+                  ))}
+
+                {/* Next Button */}
                 <button
                   disabled={currentPage === totalPages}
                   onClick={() => handlePageChange(currentPage + 1)}
@@ -340,6 +356,7 @@ const UserManagement = () => {
                   Next
                 </button>
               </div>
+
             </>
           )}
         </div>

@@ -107,7 +107,7 @@ useEffect(() => {
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="flex items-center gap-2 bg-yellow-400 text-black px-4 py-2 rounded "
           >
             <Edit className="w-4 h-4" /> Edit Profile
           </button>

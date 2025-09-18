@@ -132,7 +132,12 @@ export default function PosterSlider() {
             </div>
           </div>
         </div>
+
+
+
+
       </div>
+    
     </section>
   );
 }

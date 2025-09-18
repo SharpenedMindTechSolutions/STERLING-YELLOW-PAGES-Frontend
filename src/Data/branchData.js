@@ -74,7 +74,7 @@ export const branchData = [
       {
         city: 'Tirunelveli',
         address: '9C/1 & 5, Thilak Nagar, Madurai Road Behind Hotel Aaryas, Tirunelveli Jn - 627001',
-        phone: ['+91 0462 2321300'],
+        phone: ['0462 0233 2300'],
       },
       {
         city: 'Tuticorin',

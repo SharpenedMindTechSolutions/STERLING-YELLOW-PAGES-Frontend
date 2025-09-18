@@ -20,6 +20,7 @@ import IndividualCategoryPage from "./Pages/IndividualCategory";
 import Aboutuspage from './Pages/Aboutuspage';
 import CategoryviewDetailspage from './Pages/userpage/CategoryviewDetailspage';
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -39,6 +40,7 @@ function App() {
           <Route path="contact" element={<Contactpage />} />
           <Route path="/category/:categoryName" element={<IndividualCategoryPage />} />
           <Route path="/categoryviewdetail/:id" element={<CategoryviewDetailspage/>} />
+        
 
           {/* user dashboard routes */}
           <Route path='/post-ad/:id' element={<PostAdspage />} />

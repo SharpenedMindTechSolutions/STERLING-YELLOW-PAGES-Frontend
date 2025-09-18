@@ -18,7 +18,7 @@ export default function CategoryManagement() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const token = localStorage.getItem("adminToken"); 
+        const token = localStorage.getItem("adminToken");
         const res = await fetch(
           `${API}admin/business/category-counts`,
           {
@@ -53,8 +53,8 @@ export default function CategoryManagement() {
 
   // 🔹 Apply Filter
   filteredCategories = filteredCategories.filter((c) => {
-    if (filter === "high") return c.count >= 50;
-    if (filter === "low") return c.count < 50;
+    if (filter === "high") return c.count >= 4;
+    if (filter === "low") return c.count < 2;
     return true;
   });
 
@@ -140,47 +140,52 @@ export default function CategoryManagement() {
       </div>
 
       {/* Category Table */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="overflow-x-auto mt-6">
         {loading ? (
-          <div className="col-span-3 flex flex-col items-center justify-center text-gray-500 py-10">
+          <div className="flex flex-col items-center justify-center text-gray-500 py-10">
             <Loader2 className="w-10 h-10 animate-spin text-yellow-500 mb-3" />
             <p className="text-sm font-medium">Loading categories...</p>
           </div>
         ) : currentCategories.length > 0 ? (
-          currentCategories.map((cat, index) => (
-            <div
-              key={startIndex + index}
-              className="relative rounded-lg bg-gradient-to-br from-white to-yellow-50 shadow-lg border border-yellow-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-            >
-              {/* Category Icon */}
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-yellow-400 to-orange-500 text-white text-lg font-bold shadow-md mb-4">
-                {cat.name.charAt(0).toUpperCase()}
-              </div>
-
-              {/* Category Name */}
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Category Name: {cat.name}
-              </h3>
-
-              {/* Listing Count */}
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">Listing Count</span>
-                <span
-                  className={`px-3 py-1 text-sm font-semibold rounded-full ${cat.count >= 50
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                    }`}
+          <table className="min-w-full border border-gray-200 bg-white rounded-lg shadow-md">
+            <thead className="bg-yellow-100">
+              <tr>
+                <th className="px-4 py-2 text-center text-sm font-semibold text-gray-700">S.No</th>
+                <th className="px-4 py-2 text-center text-sm font-semibold text-gray-700">Category Name</th>
+                <th className="px-4 py-2 text-center text-sm font-semibold text-gray-700">Listing Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentCategories.map((cat, index) => (
+                <tr
+                  key={startIndex + index}
+                  className="border-t hover:bg-yellow-50 transition-colors duration-200"
                 >
-                  {cat.count}
-                </span>
-              </div>
+                  {/* Index */}
+                  <td className="px-4 py-2 text-sm text-gray-600 text-center">{startIndex + index + 1}</td>
 
-              {/* Decorative Gradient Bar */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400"></div>
-            </div>
-          ))
+                  {/* Category Name */}
+                  <td className="px-4 py-2 text-sm font-medium text-gray-800 text-center">
+                    {cat.name}
+                  </td>
+
+                  {/* Listing Count with Badge */}
+                  <td className="px-4 py-2">
+                    <span
+                      className={`px-3 py-1 text-sm font-semibold rounded-full text-center ${cat.count >= 10
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-500"
+                        }`}
+                    >
+                      {cat.count}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : (
-          <div className="col-span-3 flex flex-col items-center justify-center text-gray-500 py-10">
+          <div className="flex flex-col items-center justify-center text-gray-500 py-10">
             <FolderOpen className="w-12 h-12 text-yellow-500 mb-3" />
             <p className="text-sm font-medium">No categories found</p>
           </div>
@@ -188,8 +193,10 @@ export default function CategoryManagement() {
       </div>
 
 
+
       {/* Pagination Controls */}
-      <div className="flex justify-center items-center gap-3 mt-4">
+      <div className="flex justify-center items-center gap-2 mt-4">
+        {/* Prev Button */}
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((p) => p - 1)}
@@ -197,9 +204,34 @@ export default function CategoryManagement() {
         >
           <ChevronLeft size={20} />
         </button>
-        <span className="text-gray-700">
-          Page {currentPage} of {totalPages}
-        </span>
+
+        {/* Page Numbers */}
+        {Array.from({ length: totalPages }, (_, i) => i + 1)
+          .filter(
+            (page) =>
+              page === 1 || 
+              page === totalPages || 
+              (page >= currentPage - 1 && page <= currentPage + 1) 
+          )
+          .map((page, idx, arr) => (
+            <React.Fragment key={page}>
+              {/* Add ... when skipping */}
+              {idx > 0 && arr[idx - 1] !== page - 1 && (
+                <span className="px-2 text-gray-500">...</span>
+              )}
+              <button
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 rounded-md border ${currentPage === page
+                    ? "bg-yellow-400 text-black border-yellow-500"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+              >
+                {page}
+              </button>
+            </React.Fragment>
+          ))}
+
+        {/* Next Button */}
         <button
           disabled={currentPage === totalPages || totalPages === 0}
           onClick={() => setCurrentPage((p) => p + 1)}
@@ -208,6 +240,7 @@ export default function CategoryManagement() {
           <ChevronRight size={20} />
         </button>
       </div>
+
     </div>
   );
 }

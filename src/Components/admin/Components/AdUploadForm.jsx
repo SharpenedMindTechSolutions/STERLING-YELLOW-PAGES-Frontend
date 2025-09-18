@@ -112,7 +112,7 @@ export default function AdUploadForm() {
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-yellow-400 text-white px-4 py-2 rounded-lg hover:bg-yellow-500 transition flex items-center"
+          className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition flex items-center"
         >
           <Plus className="w-4 h-4 mr-2" />
           {showForm ? "Close Form" : "New Ad"}
