@@ -3,7 +3,7 @@ import axios from "axios";
 import { Pencil, Trash2, Plus, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 function CreateCategoryForm() {
-  const API = import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api";
+  const API = import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api/";
 
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,7 +29,7 @@ function CreateCategoryForm() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API}/admin/category/get-category`);
+      const res = await axios.get(`${API}admin/category/get-category`);
       setCategories(res.data.categories || []);
     } catch (err) {
       console.error("Error fetching categories:", err);
@@ -48,11 +48,11 @@ function CreateCategoryForm() {
     setLoading(true);
     try {
       if (modalMode === "create") {
-        const res = await axios.post(`${API}/admin/category/create-category`, { name: modalValue.trim() });
+        const res = await axios.post(`${API}admin/category/create-category`, { name: modalValue.trim() });
         if (res.data) setCategories((prev) => [res.data, ...prev]);
         setCurrentPage(1);
       } else if (modalMode === "edit") {
-        const res = await axios.put(`${API}/admin/category/${editingId}`, { name: modalValue.trim() });
+        const res = await axios.put(`${API}admin/category/${editingId}`, { name: modalValue.trim() });
         if (res.data) setCategories((prev) => prev.map((cat) => (cat._id === editingId ? { ...cat, name: res.data.name } : cat)));
       }
     } catch (err) {
@@ -69,7 +69,7 @@ function CreateCategoryForm() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`${API}/admin/category/${id}`);
+      await axios.delete(`${API}admin/category/${id}`);
       setCategories((prev) => prev.filter((cat) => cat._id !== id));
     } catch (err) {
       console.error("Error deleting category:", err);
