@@ -3,7 +3,7 @@ import { UploadCloud, Plus, Eye, Trash2, X, ImageOff, AlertTriangle } from "luci
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+const API = import.meta.env.VITE_API_BASE_URL ;
 
 export default function AdUploadForm() {
   const [ads, setAds] = useState([]);

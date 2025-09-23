@@ -6,8 +6,7 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import QuickContact from "../Components/Common/QuickContact.jsx";
 import axios from 'axios';
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
-
+const API = import.meta.env.VITE_API_BASE_URL ;
 
 const IndividualCategoryPage = () => {
   const { categoryName } = useParams();
@@ -25,7 +24,6 @@ const IndividualCategoryPage = () => {
         const res = await axios.get(
           `${API}user/ads/getall-category?category=${formattedCategory}`
         );
-      console.log(res);
         setBusinesses(res.data || []);
         setLoading(false);
       } catch (error) {

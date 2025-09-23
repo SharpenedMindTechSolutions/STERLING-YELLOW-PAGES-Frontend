@@ -18,7 +18,7 @@ import QuickContact from "../Components/Common/QuickContact";
 import axios from "axios";
 
 const API =
-  import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api/";
+  import.meta.env.VITE_API_BASE_URL;
 
 const Searchpage = () => {
   const [viewMode, setViewMode] = useState("grid");
@@ -369,8 +369,10 @@ const Searchpage = () => {
                         <div className="mt-4 space-y-2 text-center sm:text-left">
                           <p className="text-sm text-gray-600 flex items-center justify-center sm:justify-start">
                             <MapPin className="w-4 h-4 mr-1 text-gray-500" />{" "}
-                            {business.address}
+                            {business.address?.slice(0, 30)}
+                            {business.address && business.address.length > 30 ? "..." : ""}
                           </p>
+
                           <p className="text-sm text-gray-600 flex items-center justify-center sm:justify-start">
                             <Phone className="w-4 h-4 mr-1 text-gray-500" />{" "}
                             {business.phone}

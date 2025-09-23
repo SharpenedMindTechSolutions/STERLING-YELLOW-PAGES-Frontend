@@ -8,7 +8,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to="/" viewTransition
+              className="flex items-center space-x-2">
               <span className="text-2xl font-bold text-yellowCustom">Sterling Yellow Pages</span>
             </Link>
             <p className="text-gray-400 text-sm">
@@ -25,20 +26,28 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-gray-400 hover:text-yellowCustom  transition-colors">Home</Link></li>
-              <li><Link to="/aboutus" className="text-gray-400 hover:text-yellowCustom  transition-colors">About Us</Link></li>
-              <li><Link to="/search" className="text-gray-400 hover:text-yellowCustom  transition-colors">Search </Link></li>
-              <li><Link to="/categories" className="text-gray-400 hover:text-yellowCustom  transition-colors">Categories</Link></li>
+              <li><Link to="/" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">Home</Link></li>
+              <li><Link to="/aboutus" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">About Us</Link></li>
+              <li><Link to="/search" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">Search </Link></li>
+              <li><Link to="/categories" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">Categories</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Popular Categories</h3>
             <ul className="space-y-2">
-              <li><Link to="/category/restaurants" className="text-gray-400 hover:text-yellowCustom  transition-colors">Restaurants</Link></li>
-              <li><Link to="/category/hospitals" className="text-gray-400 hover:text-yellowCustom  transition-colors">Healthcare</Link></li>
-              <li><Link to="/category/Legal Service" className="text-gray-400 hover:text-yellowCustom  transition-colors">Legal Services</Link></li>
-              <li><Link to="/category/salons" className="text-gray-400 hover:text-yellowCustom  transition-colors">Salons</Link></li>
+              <li><Link to="/category/restaurants" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">Restaurants</Link></li>
+              <li><Link to="/category/hospitals" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">Healthcare</Link></li>
+              <li><Link to="/category/Legal Service" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">Legal Services</Link></li>
+              <li><Link to="/category/salons" viewTransition
+                className="text-gray-400 hover:text-yellowCustom  transition-colors">Salons</Link></li>
             </ul>
           </div>
 

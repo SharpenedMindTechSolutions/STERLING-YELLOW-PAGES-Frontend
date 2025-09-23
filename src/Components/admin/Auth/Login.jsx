@@ -67,6 +67,7 @@ const Login = () => {
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{" "}
             <Link
+            viewTransition
               to="/admin/register"
               className="font-medium text-gray-700 hover:underline"
             >

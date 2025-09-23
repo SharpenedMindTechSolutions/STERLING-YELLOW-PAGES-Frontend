@@ -75,7 +75,7 @@ const Categories = () => {
                                 const Icon = iconMap[category.icon] || Package;
                                 return (
                                     <Link
-                                    viewTransition
+                                        viewTransition
                                         key={category.id}
                                         to={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
                                         className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6 group"
@@ -111,12 +111,16 @@ const Categories = () => {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 to="/contact"
+                                viewTransition
+
                                 className="bg-white text-black px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-medium"
                             >
                                 Contact Us
                             </Link>
                             <Link
                                 to="/login"
+                                viewTransition
+
                                 className="bg-yellowCustom text-black px-8 py-3 rounded-lg  transition-colors font-medium"
                             >
                                 List Your Business

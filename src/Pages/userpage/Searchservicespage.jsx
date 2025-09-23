@@ -6,8 +6,8 @@ import Footer from "../../Layout/Footer";
 import { MapPin, Phone } from "lucide-react";
 import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
 
+const API = import.meta.env.VITE_API_BASE_URL;
 
 function Searchservicespage() {
     const [searchParams] = useSearchParams();
@@ -92,15 +92,20 @@ function Searchservicespage() {
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">
                                             {business.name}
                                         </h3>
-                                        <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-                                            {business.description || "No description available."}
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            {business.description
+                                                ? business.description.slice(0, 100) + (business.description.length > 100 ? "..." : "")
+                                                : "No description available."}
                                         </p>
 
                                         <div className="mt-auto space-y-2 text-sm text-gray-700">
-                                            <p className="flex items-center">
+                                            <p className="flex items-center text-sm text-gray-600">
                                                 <MapPin className="w-4 h-4 mr-2 text-yellow-500" />
-                                                {business.address || "Address not available"}
+                                                {business.address
+                                                    ? business.address.slice(0, 30) + (business.address.length > 30 ? "..." : "")
+                                                    : "Address not available"}
                                             </p>
+
                                             <p className="flex items-center">
                                                 <Phone className="w-4 h-4 mr-2 text-yellow-500" />
                                                 {business.phone || "N/A"}
@@ -126,11 +131,11 @@ function Searchservicespage() {
                                 onClick={handlePrev}
                                 disabled={page === 1}
                                 className={`px-4 py-2 rounded-lg flex items-center gap-1 ${page === 1
-                                        ? "bg-gray-300 cursor-not-allowed"
-                                        : "bg-yellow-400 hover:bg-yellow-500 text-black"
+                                    ? "bg-gray-300 cursor-not-allowed"
+                                    : "bg-yellow-400 hover:bg-yellow-500 text-black"
                                     }`}
                             >
-                                <ChevronLeft className="w-4 h-4" /> 
+                                <ChevronLeft className="w-4 h-4" />
                             </button>
 
                             <span className="text-gray-700 font-medium">
@@ -141,11 +146,11 @@ function Searchservicespage() {
                                 onClick={handleNext}
                                 disabled={page === totalPages}
                                 className={`px-4 py-2 rounded-lg flex items-center gap-1 ${page === totalPages
-                                        ? "bg-gray-300 cursor-not-allowed"
-                                        : "bg-yellow-400 hover:bg-yellow-500 text-black"
+                                    ? "bg-gray-300 cursor-not-allowed"
+                                    : "bg-yellow-400 hover:bg-yellow-500 text-black"
                                     }`}
                             >
-                                 <ChevronRight className="w-4 h-4" />
+                                <ChevronRight className="w-4 h-4" />
                             </button>
                         </div>
 

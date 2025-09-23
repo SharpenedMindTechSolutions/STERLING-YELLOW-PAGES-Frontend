@@ -10,10 +10,11 @@ import {
   X,
   LayoutGrid,
   List as ListIcon,
+  Minus,
 } from "lucide-react";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+const API = import.meta.env.VITE_API_BASE_URL;
 
 const BusinessListings = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -111,6 +112,8 @@ const BusinessListings = () => {
     setSelectedBusiness({
       name: "", category: "", description: "", address: "", phone: "",
       email: "",
+      googleMapUrl: "",
+      specifications: [{ name: "", role: "", number: "" }],
       logoFile: null,
       status: "pending",
     });
@@ -133,23 +136,36 @@ const BusinessListings = () => {
       alert("Business name and category are required.");
       return;
     }
+
     const token = localStorage.getItem("adminToken");
     if (!token) {
       alert("Admin not logged in");
       return;
     }
+
     try {
       setLoading(true);
+
       const formData = new FormData();
       formData.append("name", selectedBusiness.name);
-      formData.append("email", selectedBusiness.email);
+      formData.append("email", selectedBusiness.email || "");
       formData.append("category", selectedBusiness.category);
-      formData.append("description", selectedBusiness.description);
-      formData.append("address", selectedBusiness.address);
-      formData.append("phone", selectedBusiness.phone);
+      formData.append("description", selectedBusiness.description || "");
+      formData.append("address", selectedBusiness.address || "");
+      formData.append("phone", selectedBusiness.phone || "");
+      formData.append("googleMapUrl", selectedBusiness.googleMapUrl || "");
+
+      // Convert specifications array to JSON string
+      formData.append(
+        "specifications",
+        JSON.stringify(selectedBusiness.specifications || [])
+      );
+
+      // Append image if uploaded
       if (selectedBusiness.logoFile) {
         formData.append("image", selectedBusiness.logoFile);
       }
+
       let res;
       if (modalMode === "add") {
         res = await axios.post(`${API}admin/create-business`, formData, {
@@ -160,6 +176,7 @@ const BusinessListings = () => {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
         });
       }
+
       setShowModal(false);
       setSelectedBusiness(null);
       fetchBusinesses();
@@ -170,6 +187,7 @@ const BusinessListings = () => {
       setLoading(false);
     }
   };
+
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem("adminToken");
@@ -522,6 +540,25 @@ const BusinessModal = ({ business, setBusiness, onClose, onSave, mode, categorie
     setShowDropdown(false);
   };
 
+  const handleSpecChange = (idx, field, value) => {
+    const updated = [...business.specifications];
+    updated[idx][field] = value;
+    setBusiness({ ...business, specifications: updated });
+  };
+
+  const addSpec = () => {
+    setBusiness({
+      ...business,
+      specifications: [...(business.specifications || []), { name: "", role: "", number: "" }],
+    });
+  };
+
+  const removeSpec = (idx) => {
+    const updated = [...business.specifications];
+    updated.splice(idx, 1);
+    setBusiness({ ...business, specifications: updated });
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
       <div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8 rounded-2xl shadow-2xl relative">
@@ -624,6 +661,49 @@ const BusinessModal = ({ business, setBusiness, onClose, onSave, mode, categorie
               className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
             />
           </div>
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-medium mb-2">Google Map URL</label>
+            <input
+              type="url"
+              placeholder="Enter Google Map URL"
+              value={business?.googleMapUrl || ""}
+              onChange={(e) => setBusiness({ ...business, googleMapUrl: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-5 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition shadow-sm"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <h3 className="font-semibold text-gray-700 mb-2">Specifications</h3>
+            {business?.specifications?.map((spec, idx) => (
+              <div key={idx} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={spec.name}
+                  onChange={(e) => handleSpecChange(idx, "name", e.target.value)}
+                  className="border px-3 py-2 rounded w-1/3"
+                />
+                <input
+                  type="text"
+                  placeholder="Role"
+                  value={spec.role}
+                  onChange={(e) => handleSpecChange(idx, "role", e.target.value)}
+                  className="border px-3 py-2 rounded w-1/3"
+                />
+                <input
+                  type="text"
+                  placeholder="Number"
+                  value={spec.number}
+                  onChange={(e) => handleSpecChange(idx, "number", e.target.value)}
+                  className="border px-3 py-2 rounded w-1/3"
+                />
+                <button onClick={() => removeSpec(idx)} className="px-2 text-red-500 font-bold"><Minus /></button>
+              </div>
+            ))}
+            <button onClick={addSpec} className="text-green-500 mt-2">+ Add Specification</button>
+          </div>
+
+
 
           {/* Business Image */}
           <div className="flex flex-col">
@@ -759,6 +839,36 @@ const ViewBusinessModal = ({ business, onClose }) => (
               {business.status}
             </p>
           </div>
+
+          {/* Google Map */}
+          {business.googleMapUrl && (
+            <div className="p-3 bg-gray-50 rounded-xl shadow-sm col-span-2">
+              <p className="text-sm text-gray-500 font-medium mb-1">Map</p>
+              <a
+                href={business.googleMapUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-500 underline"
+              >
+                View Map
+              </a>
+            </div>
+          )}
+
+          {/* Specifications */}
+          {business.specifications && business.specifications.length > 0 && (
+            <div className="p-3 bg-gray-50 rounded-xl shadow-sm col-span-2">
+              <p className="text-sm text-gray-500 font-medium mb-2">Specifications</p>
+              <ol className="list-disc ml-5 space-y-1 text-gray-700">
+                {business.specifications.map((spec, idx) => (
+                  <li key={idx}>
+                    <span className="font-medium">{spec.name}</span> - {spec.role} - {spec.number}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
         </div>
       </div>
     </div>

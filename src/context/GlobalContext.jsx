@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from '../utils/axiosInstance';
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+const API = import.meta.env.VITE_API_BASE_URL ;
 
 
 

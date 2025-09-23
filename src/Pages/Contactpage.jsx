@@ -15,7 +15,7 @@ function Contactpage() {
     }, []);
     return (
         <div>
-            <QuickContact/>
+            <QuickContact />
             <Header />
             <div className="py-20 bg-yellowCustom">
                 <div className="max-w-3xl mx-auto text-center px-4">
@@ -37,6 +37,8 @@ function Contactpage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
+                            viewTransition
+
                             to="/contact"
                             className="bg-white text-black px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-medium"
                         >
@@ -44,6 +46,8 @@ function Contactpage() {
                         </Link>
                         <Link
                             to="/login"
+                            viewTransition
+
                             className="bg-yellowCustom text-black px-8 py-3 rounded-lg  transition-colors font-medium"
                         >
                             List Your Business

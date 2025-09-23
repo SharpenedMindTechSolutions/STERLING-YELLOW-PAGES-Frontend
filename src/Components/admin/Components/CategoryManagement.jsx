@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { Loader2, FolderOpen } from "lucide-react";
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+const API = import.meta.env.VITE_API_BASE_URL ;
 
 export default function CategoryManagement() {
   const [categories, setCategories] = useState([]);

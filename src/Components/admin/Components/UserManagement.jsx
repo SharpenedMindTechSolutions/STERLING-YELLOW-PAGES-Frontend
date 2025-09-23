@@ -4,7 +4,7 @@ import { Download, Search } from "lucide-react";
 import axios from "axios";
 import { Ban, Unlock } from "lucide-react";
 
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+const API = import.meta.env.VITE_API_BASE_URL;
 
 const UserManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -325,9 +325,9 @@ const UserManagement = () => {
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(
                     (page) =>
-                      page === 1 || 
-                      page === totalPages || 
-                      (page >= currentPage - 1 && page <= currentPage + 1) 
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
                   )
                   .map((page, idx, arr) => (
                     <React.Fragment key={page}>
@@ -338,8 +338,8 @@ const UserManagement = () => {
                       <button
                         onClick={() => handlePageChange(page)}
                         className={`px-3 py-1 border rounded ${currentPage === page
-                            ? "bg-yellow-400 text-black"
-                            : "bg-white hover:bg-gray-100"
+                          ? "bg-yellow-400 text-black"
+                          : "bg-white hover:bg-gray-100"
                           }`}
                       >
                         {page}

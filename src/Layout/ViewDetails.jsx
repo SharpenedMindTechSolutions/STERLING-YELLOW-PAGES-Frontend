@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Globe, ArrowLeft, HeartIcon } from 'lucide-react';
+import { MapPin, Phone, Mail, Globe, ArrowLeft, Users } from 'lucide-react';
 import axios from 'axios';
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+const API = import.meta.env.VITE_API_BASE_URL;
 
 function ViewDetails() {
   const { id } = useParams();
@@ -11,7 +10,7 @@ function ViewDetails() {
   const [business, setBusiness] = useState(location.state?.business || null);
   const [loading, setLoading] = useState(!business);
   const [error, setError] = useState(null);
-  const [expanded, setExpanded] = useState(false);  
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -19,7 +18,6 @@ function ViewDetails() {
       const fetchBusinessDetails = async () => {
         try {
           const res = await axios.get(`${API}user/ads/business/${id}`);
-          console.log(res);
           setBusiness(res.data);
         } catch (err) {
           setError("Business not found");
@@ -33,24 +31,11 @@ function ViewDetails() {
     }
   }, [id, business]);
 
-  if (loading) {
-    return (
-      <div className="p-10 text-center text-gray-600 text-lg font-semibold">
-        Loading details...
-      </div>
-    );
-  }
-
-  if (error || !business) {
-    return (
-      <div className="p-10 text-center text-red-600 text-lg font-semibold">
-        {error || "Business not found."}
-      </div>
-    );
-  }
+  if (loading) return <div className="p-10 text-center text-gray-600 text-lg font-semibold">Loading details...</div>;
+  if (error || !business) return <div className="p-10 text-center text-red-600 text-lg font-semibold">{error || "Business not found."}</div>;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-5">
         <Link to="/search" className="inline-flex items-center text-black font-medium">
           <ArrowLeft className="w-5 h-5 mr-2" /> Back to Search
@@ -58,8 +43,9 @@ function ViewDetails() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* ✅ Image */}
+        {/* Main Section */}
         <div className="lg:col-span-2 space-y-8">
+          {/* Business Image */}
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="relative h-96">
               <img
@@ -70,54 +56,63 @@ function ViewDetails() {
             </div>
           </div>
 
-          {/* ✅ Details Section */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex justify-between mb-4">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">{business.name}</h1>
-                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                  {business.category}
-                </span>
-              </div>
-            </div>
-            <p className="text-gray-700 text-lg mb-2">
-              {expanded
-                ? business.description
-                : business.description?.length > 100
-                  ? business.description.slice(0, 100) + "..."
-                  : business.description}
-            </p>
+          {/* Business Details */}
+          <div className="bg-white rounded-lg shadow-sm p-6 space-y-4">
+            <h1 className="text-3xl font-bold">{business.name}</h1>
+            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">{business.category}</span>
 
+            <p className="text-gray-700 text-lg mt-2">
+              {expanded ? business.description : (business.description?.slice(0, 100) + (business.description?.length > 100 ? "..." : ""))}
+            </p>
             {business.description?.length > 100 && (
-              <button
-                onClick={() => setExpanded(!expanded)}
-                className="text-black font-medium  mb-6"
-              >
+              <button onClick={() => setExpanded(!expanded)} className="text-black font-medium">
                 {expanded ? "See Less" : "See More"}
               </button>
             )}
 
-            <div className="grid sm:grid-cols-2 gap-4">
-              <button className="bg-yellowCustom w-full text-black px-6 py-3 rounded-lg hover:bg-yellowCustom hover:text-black flex items-center justify-center">
+            {/* Contact Buttons */}
+            <div className="grid sm:grid-cols-2 gap-4 mt-4">
+              <button className="bg-yellowCustom w-full text-black px-6 py-3 rounded-lg flex items-center justify-center">
                 <Phone className="w-5 h-5 mr-2" /> {business.phone}
               </button>
               <a
                 href={`mailto:${business.email}`}
-                className="bg-red-600 w-full text-black px-6 py-3 rounded-lg hover:bg-red-500 hover:text-white flex items-center justify-center"
+                className="bg-red-600 w-full text-black px-6 py-3 rounded-lg flex items-center justify-center hover:bg-red-500 hover:text-white"
               >
-                <Mail className="w-5 h-5 mr-2" />
-                {business.email}
+                <Mail className="w-5 h-5 mr-2" /> {business.email}
               </a>
-
             </div>
+
+
+
+            {/* Specifications */}
+            {business.specifications && business.specifications.length > 0 && (
+              <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold mb-5 flex items-center gap-2">
+                  <Users className="w-5 h-5 " /> Special Persons Details
+                </h3>
+                <ul className="space-y-2">
+                  {business.specifications.map((spec, idx) => (
+                    <li key={idx} className="flex justify-between border-b pb-1">
+                      <span>{spec.name}</span>
+                      <span>{spec.role || "Role N/A"}</span>
+                      <span className="flex items-center gap-1">
+                        <Phone className="w-4 h-4 text-gray-500" />
+                        {spec.number || "Number N/A"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* ✅ Sidebar */}
+        {/* Sidebar */}
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 space-y-4">
             <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex space-x-3">
                 <MapPin className="w-5 h-5 text-gray-400" />
                 <div>
@@ -153,12 +148,12 @@ function ViewDetails() {
             </div>
           </div>
 
-          {/* ✅ Business Hours */}
+          {/* Business Hours */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-semibold mb-4">Business Hours</h3>
-            <div className="space-y-2">
+            <div className="space-y-2 text-sm">
               {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, i) => (
-                <div key={i} className="flex justify-between text-sm">
+                <div key={i} className="flex justify-between">
                   <span>{day}</span>
                   <span>{day === 'Sunday' ? 'Closed' : day === 'Saturday' ? '10:00 AM - 4:00 PM' : '9:00 AM - 6:00 PM'}</span>
                 </div>
@@ -166,6 +161,27 @@ function ViewDetails() {
             </div>
           </div>
 
+          {/* Google Map */}
+          {/* Location Section */}
+          {business.googleMapUrl && (
+            <div className="mt-6 bg-white rounded-lg shadow-sm p-4">
+              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-gray-600" /> Location
+              </h3>
+              <div className="w-full h-64 rounded-lg overflow-hidden shadow-sm">
+                <iframe
+                  src={business.googleMapUrl}
+                  width="100%"
+                  height="100%"
+                  className="border-0"
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Google Map"
+                />
+              </div>
+            </div>
+          )}
 
         </div>
       </div>

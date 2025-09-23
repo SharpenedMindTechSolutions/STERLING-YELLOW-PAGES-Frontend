@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Users, Tags, CheckCircle } from "lucide-react";
 
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
+const API = import.meta.env.VITE_API_BASE_URL ;
 
 const Dashboard = () => {
   const [stats, setStats] = useState([]);

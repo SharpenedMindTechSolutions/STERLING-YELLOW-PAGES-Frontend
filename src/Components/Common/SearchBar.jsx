@@ -10,7 +10,7 @@ const SearchBar = ({ onSearch }) => {
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const API = import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api/";
+  const API = import.meta.env.VITE_API_BASE_URL ;
 
   // Fetch categories once
   useEffect(() => {

@@ -131,6 +131,7 @@ const Homepage = () => {
               return (
                 <Link
                   key={category.id}
+                  viewTransition
                   to={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
                   className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition-shadow group"
                 >
@@ -147,6 +148,7 @@ const Homepage = () => {
           <div className="text-center">
             <Link
               to="/categories"
+              viewTransition
               className="inline-flex items-center text-black hover:text-yellowCustom font-medium"
             >
               View All Categories <ArrowRight className="ml-2 w-5 h-5" />
@@ -170,6 +172,7 @@ const Homepage = () => {
               </button>
               <Link
                 to="/register"
+                viewTransition
                 className="bg-yellowCustom text-black px-8 py-3 rounded-lg transition-colors font-medium"
               >
                 Get Started Today

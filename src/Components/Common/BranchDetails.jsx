@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Phone, Mail, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion'; // <-- import Framer Motion
+import { motion } from 'framer-motion'; 
 
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/';
+const API = import.meta.env.VITE_API_BASE_URL ;
 
 function BranchDetails() {
     const [branchData, setBranchData] = useState([]);

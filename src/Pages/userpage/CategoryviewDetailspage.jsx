@@ -1,13 +1,13 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { MapPin, Phone, ChevronLeft, Mail, Globe } from "lucide-react";
+import { MapPin, Phone, ChevronLeft, Mail, Globe, Users } from "lucide-react";
 import axios from "axios";
 import Header from "../../Layout/Header";
 import Footer from "../../Layout/Footer";
 import QuickContact from "../../Components/Common/QuickContact";
 
-const API = import.meta.env.VITE_API_BASE_URL || 'https://sterling-yellow-pages-backend.onrender.com/api/'
-
+const API = import.meta.env.VITE_API_BASE_URL;
 
 function CategoryviewDetailspage() {
   const { id } = useParams();
@@ -20,9 +20,7 @@ function CategoryviewDetailspage() {
     const fetchBusinessDetail = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `${API}user/ads/get-categorybusiness/${id}`
-        );
+        const res = await axios.get(`${API}user/ads/get-categorybusiness/${id}`);
         setBusiness(res.data);
       } catch (error) {
         console.error("Error fetching business details:", error);
@@ -30,7 +28,6 @@ function CategoryviewDetailspage() {
         setLoading(false);
       }
     };
-
     fetchBusinessDetail();
     window.scrollTo(0, 0);
   }, [id]);
@@ -40,7 +37,7 @@ function CategoryviewDetailspage() {
   if (!business)
     return <p className="text-center mt-10 text-gray-600">Business not found.</p>;
 
-  const DESCRIPTION_LIMIT = 150; 
+  const DESCRIPTION_LIMIT = 150;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -104,6 +101,28 @@ function CategoryviewDetailspage() {
                   {business.email}
                 </a>
               </div>
+
+
+              {/* Specifications / Special Persons */}
+              {business.specifications && business.specifications.length > 0 && (
+                <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <Users className="w-5 h-5" /> Special Persons Details
+                  </h3>
+                  <ul className="space-y-2">
+                    {business.specifications.map((spec, idx) => (
+                      <li key={idx} className="flex justify-between items-center border-b pb-1">
+                        <span>{spec.name}</span>
+                        <span>{spec.role || "Role N/A"}</span>
+                        <span className="flex items-center gap-1">
+                          <Phone className="w-4 h-4 text-gray-500" />
+                          {spec.number || "Number N/A"}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
@@ -182,6 +201,26 @@ function CategoryviewDetailspage() {
                 ))}
               </div>
             </div>
+
+              {business.googleMapUrl && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                    <MapPin className="w-5 h-5" /> Location
+                  </h3>
+                  <div className="w-full h-64 rounded-lg overflow-hidden shadow-sm">
+                    <iframe
+                      src={business.googleMapUrl}
+                      width="100%"
+                      height="100%"
+                      className="border-0"
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Google Map"
+                    />
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       </main>

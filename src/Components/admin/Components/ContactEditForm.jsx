@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Plus, Trash2, Edit2, X } from "lucide-react";
 
-const API = import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api/";
+const API = import.meta.env.VITE_API_BASE_URL ;
 
 const ContactEditForm = () => {
   const [branchesData, setBranchesData] = useState([]);

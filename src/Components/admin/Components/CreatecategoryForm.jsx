@@ -3,7 +3,7 @@ import axios from "axios";
 import { Pencil, Trash2, Plus, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 function CreateCategoryForm() {
-  const API = import.meta.env.VITE_API_BASE_URL || "https://sterling-yellow-pages-backend.onrender.com/api/";
+  const API = import.meta.env.VITE_API_BASE_URL ;
 
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
