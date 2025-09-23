@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Globe, ArrowLeft, Users } from 'lucide-react';
 import axios from 'axios';
+import googlemap from "../assets/googlemap.jpg"
 const API = import.meta.env.VITE_API_BASE_URL;
 
 function ViewDetails() {
@@ -168,20 +169,24 @@ function ViewDetails() {
               <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-gray-600" /> Location
               </h3>
+
+              {/* ✅ Replace iframe with clickable image */}
               <div className="w-full h-64 rounded-lg overflow-hidden shadow-sm">
-                <iframe
-                  src={business.googleMapUrl}
-                  width="100%"
-                  height="100%"
-                  className="border-0"
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Google Map"
-                />
+                <a
+                  href={business.googleMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={googlemap}  // ✅ your local image
+                    alt="View Location on Google Maps"
+                    className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition"
+                  />
+                </a>
               </div>
             </div>
           )}
+
 
         </div>
       </div>
