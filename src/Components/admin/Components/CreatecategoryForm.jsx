@@ -17,7 +17,7 @@ function CreateCategoryForm() {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 100;
 
   // Axios default header
   useEffect(() => {
