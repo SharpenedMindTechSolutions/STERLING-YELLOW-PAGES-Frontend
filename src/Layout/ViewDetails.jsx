@@ -19,6 +19,7 @@ function ViewDetails() {
       const fetchBusinessDetails = async () => {
         try {
           const res = await axios.get(`${API}user/ads/business/${id}`);
+        
           setBusiness(res.data);
         } catch (err) {
           setError("Business not found");
@@ -96,10 +97,9 @@ function ViewDetails() {
                   {business.specifications.map((spec, idx) => (
                     <li key={idx} className="flex justify-between border-b pb-1">
                       <span>{spec.name}</span>
-                      <span>{spec.role || "Role N/A"}</span>
+                      <span>{spec.role }</span>
                       <span className="flex items-center gap-1">
-                        <Phone className="w-4 h-4 text-gray-500" />
-                        {spec.number || "Number N/A"}
+                        {spec.number  }
                       </span>
                     </li>
                   ))}

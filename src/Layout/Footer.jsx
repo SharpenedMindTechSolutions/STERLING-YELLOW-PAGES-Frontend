@@ -44,7 +44,7 @@ const Footer = () => {
                 className="text-gray-400 hover:text-yellowCustom  transition-colors">Restaurants</Link></li>
               <li><Link to="/category/hospitals" viewTransition
                 className="text-gray-400 hover:text-yellowCustom  transition-colors">Healthcare</Link></li>
-              <li><Link to="/category/Legal Service" viewTransition
+              <li><Link to="/category/Legal Services" viewTransition
                 className="text-gray-400 hover:text-yellowCustom  transition-colors">Legal Services</Link></li>
               <li><Link to="/category/salons" viewTransition
                 className="text-gray-400 hover:text-yellowCustom  transition-colors">Salons</Link></li>

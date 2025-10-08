@@ -47,7 +47,7 @@ const PostAds = () => {
     googleMapUrl: Yup.string().url("Invalid Google Maps URL"),
     specifications: Yup.array().of(
       Yup.object({
-        name: Yup.string().required("Name is required"),
+        name: Yup.string(),
         role: Yup.string(),
         number: Yup.string().matches(/^[0-9]+$/, "Must be digits"),
       })
